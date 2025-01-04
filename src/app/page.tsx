@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardPaste } from 'lucide-react';
+import { ClipboardPaste, Copy } from 'lucide-react';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -35,21 +35,57 @@ export default function Home() {
   // Handle paste attempt
   const handlePasteAttempt = async () => {
     try {
-      // Try modern Clipboard API first
-      if (navigator.clipboard?.readText) {
+      // Check if Clipboard API is supported
+      if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
         const clipboardText = await navigator.clipboard.readText();
         setText(clipboardText);
         updateText(clipboardText);
         return;
       }
 
-      // Fallback for iOS: Focus and paste into hidden input
+      // Fallback for iOS Safari
       if (hiddenInput.current) {
         hiddenInput.current.focus();
-        document.execCommand('paste');
+        // Use a timeout to ensure focus is complete
+        setTimeout(() => {
+          document.execCommand('paste');
+        }, 100);
       }
     } catch (err) {
       setError('Failed to paste from clipboard');
+      console.error(err);
+    }
+  };
+
+  // Handle copy functionality with fallback
+  const handleCopy = async () => {
+    try {
+      // Check if Clipboard API is supported
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      // Fallback for iOS Safari
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        textArea.remove();
+      } catch (err) {
+        textArea.remove();
+        setError('Failed to copy text');
+        console.error(err);
+      }
+    } catch (err) {
+      setError('Failed to copy text');
       console.error(err);
     }
   };
@@ -120,7 +156,18 @@ export default function Home() {
             />
             
             <div className="rounded-lg border p-4 bg-white">
-              <h3 className="font-medium mb-2">Current Stored Text:</h3>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium">Current Stored Text:</h3>
+                {text && (
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1 px-2 py-1 text-sm rounded-md hover:bg-gray-100"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </button>
+                )}
+              </div>
               <div className="whitespace-pre-wrap">
                 {text || <span className="text-muted-foreground italic">No text shared yet</span>}
               </div>
