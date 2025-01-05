@@ -1,16 +1,32 @@
-# Local Text Share
+# Local Text & Image Share
 
-A simple web application that allows you to share text between devices on your local network. Perfect for quickly transferring text between your phone and computer without the need for external services.
+A simple web application that allows you to share text and images between devices on your local network. Perfect for quickly transferring content between your phone and computer without the need for external services.
 
 ## Features
 
-- **Instant Paste**: One-click paste functionality optimized for mobile devices
-- **Real-time Sync**: Text updates sync automatically between devices every second
-- **Local Network**: Works on any device connected to the same network
-- **Cross-Platform**: Compatible with desktop and mobile browsers
-- **No Setup Required**: Just run the server and open the URL on your devices
-- This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
+- **Text Sharing**
+  - One-click paste functionality optimized for mobile devices
+  - Copy text directly to clipboard on desktop
+  - Real-time sync between devices
+  
+- **Image Sharing**
+  - Upload images up to 5MB
+  - Download images on mobile devices
+  - Copy images directly to clipboard on desktop
+  
+- **User Experience**
+  - Intuitive mode switching of text and image sharing modes, with tooltips and clear labels
+  - Real-time sync: Updates sync automatically between devices every 5 seconds
+  - Dark/Light mode support
+  - Mobile-optimized interface
+  - Cross-platform compatibility
+  
+- **Technical Features**
+  - Local network operation
+  - No external services required
+  - Built with Next.js App Router
+  - Modern clipboard API with fallbacks
+  - Responsive design
 
 ## Getting Started
 
@@ -44,35 +60,42 @@ yarn dev
 
 ## Usage
 
-1. Open the application on your devices
+### Text Sharing
+1. Click the clipboard icon to switch to text mode
 2. Click the paste area to paste text from your clipboard
-3. The text will automatically appear on all connected devices
-4. Click to paste new text at any time
+3. Text will automatically sync to all connected devices
+4. Click 'Copy' to copy text on other devices
+
+### Image Sharing
+1. Click the image icon to switch to image mode
+2. Click to upload an image (max 5MB)
+3. On mobile: Click 'Download' to save the image
+4. On desktop: Click 'Copy' to copy image to clipboard
 
 ## Built With
 
-- [Next.js](https://nextjs.org/) - The React framework
+- [Next.js 14](https://nextjs.org/) - React framework with App Router
 - [React](https://reactjs.org/) - UI library
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
 - [shadcn/ui](https://ui.shadcn.com/) - UI components
+- [Lucide Icons](https://lucide.dev/) - Icon system
+- [next-themes](https://github.com/pacocoursey/next-themes) - Theme management
+- [Sonner](https://sonner.emilkowal.ski/) - Toast notifications
 
 ## Development
 
 To build for production:
 
-
-First, run the development server:
-
 ```bash
-npm run dev
+npm run build
+npm run start
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn build
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Images are limited to 5MB to ensure smooth operation
+- Content is stored in memory and cleared when the server restarts
+- All sharing happens over your local network - no data leaves your network
